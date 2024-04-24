@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../db/notes_database.dart';
-import '../model/note.dart';
-import '../page/edit_note_page.dart';
+import '../db/movie_database.dart';
+import '../model/movie.dart';
+import '../page/edit_movie_page.dart';
 
 class NoteDetailPage extends StatefulWidget {
   final int noteId;

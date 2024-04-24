@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
-import '../db/notes_database.dart';
-import '../model/note.dart';
-import '../widget/note_form_widget.dart';
+import '../db/movie_database.dart';
+import '../model/movie.dart';
+import '../widget/movie_form_widget.dart';
 
-class AddEditNotePage extends StatefulWidget {
-  final Note? note;
+class AddEditMoviePage extends StatefulWidget {
+  final Movie? movie;
 
-  const AddEditNotePage({
+  const AddEditMoviePage({
     Key? key,
-    this.note,
+    this.movie,
   }) : super(key: key);
 
   @override
-  State<AddEditNotePage> createState() => _AddEditNotePageState();
+  State<AddEditMoviePage> createState() => _AddEditMoviePageState();
 }
 
-class _AddEditNotePageState extends State<AddEditNotePage> {
+class _AddEditMoviePageState extends State<AddEditMoviePage> {
   final _formKey = GlobalKey<FormState>();
-  late bool isImportant;
-  late int number;
+  late String imageURL;
   late String title;
   late String description;
 
@@ -26,10 +25,9 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
   void initState() {
     super.initState();
 
-    isImportant = widget.note?.isImportant ?? false;
-    number = widget.note?.number ?? 0;
-    title = widget.note?.title ?? '';
-    description = widget.note?.description ?? '';
+    imageURL = widget.movie?.imageURL ?? '';
+    title = widget.movie?.title ?? '';
+    description = widget.movie?.description ?? '';
   }
 
   @override
@@ -39,17 +37,13 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
     ),
     body: Form(
       key: _formKey,
-      child: NoteFormWidget(
-        isImportant: isImportant,
-        number: number,
+      child: MovieFormWidget(
         title: title,
         description: description,
-        onChangedImportant: (isImportant) =>
-            setState(() => this.isImportant = isImportant),
-        onChangedNumber: (number) => setState(() => this.number = number),
         onChangedTitle: (title) => setState(() => this.title = title),
         onChangedDescription: (description) =>
             setState(() => this.description = description),
+        onChangedImageURL: (imageURL) => setState(() => this.imageURL = imageURL),
       ),
     ),
   );
@@ -64,48 +58,46 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
           foregroundColor: Colors.white,
           backgroundColor: isFormValid ? null : Colors.grey.shade700,
         ),
-        onPressed: addOrUpdateNote,
+        onPressed: addOrUpdateMovie,
         child: const Text('Save'),
       ),
     );
   }
 
-  void addOrUpdateNote() async {
+  void addOrUpdateMovie() async {
     final isValid = _formKey.currentState!.validate();
 
     if (isValid) {
-      final isUpdating = widget.note != null;
+      final isUpdating = widget.movie != null;
 
       if (isUpdating) {
-        await updateNote();
+        await updateMovie();
       } else {
-        await addNote();
+        await addMovie();
       }
 
       Navigator.of(context).pop();
     }
   }
 
-  Future updateNote() async {
-    final note = widget.note!.copy(
-      isImportant: isImportant,
-      number: number,
+  Future updateMovie() async {
+    final movie = widget.movie!.copy(
       title: title,
       description: description,
+      imageURL: imageURL,
     );
 
-    await NotesDatabase.instance.update(note);
+    await MovieDatabase.instance.update(movie);
   }
 
-  Future addNote() async {
-    final note = Note(
+  Future addMovie() async {
+    final movie = Movie(
       title: title,
-      isImportant: true,
-      number: number,
       description: description,
+      imageURL: imageURL,
       createdTime: DateTime.now(),
     );
 
-    await NotesDatabase.instance.create(note);
+    await MovieDatabase.instance.create(movie);
   }
 }
