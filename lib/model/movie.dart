@@ -1,4 +1,4 @@
-final String tableMovie = 'movie';
+final String tableMovie = 'movies';
 
 class MovieFields {
   static final List<String> values = [
