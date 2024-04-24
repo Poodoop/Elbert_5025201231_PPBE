@@ -4,33 +4,33 @@ import '../db/movie_database.dart';
 import '../model/movie.dart';
 import '../page/edit_movie_page.dart';
 
-class NoteDetailPage extends StatefulWidget {
-  final int noteId;
+class MovieDetailPage extends StatefulWidget {
+  final int movieId;
 
-  const NoteDetailPage({
+  const MovieDetailPage({
     Key? key,
-    required this.noteId,
+    required this.movieId,
   }) : super(key: key);
 
   @override
-  State<NoteDetailPage> createState() => _NoteDetailPageState();
+  State<MovieDetailPage> createState() => _MovieDetailPageState();
 }
 
-class _NoteDetailPageState extends State<NoteDetailPage> {
-  late Note note;
+class _MovieDetailPageState extends State<MovieDetailPage> {
+  late Movie movie;
   bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
 
-    refreshNote();
+    refreshMovie();
   }
 
-  Future refreshNote() async {
+  Future refreshMovie() async {
     setState(() => isLoading = true);
 
-    note = await NotesDatabase.instance.readNote(widget.noteId);
+    movie = await MovieDatabase.instance.readMovie(widget.movieId);
 
     setState(() => isLoading = false);
   }
@@ -48,7 +48,7 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
         padding: const EdgeInsets.symmetric(vertical: 8),
         children: [
           Text(
-            note.title,
+            movie.title,
             style: const TextStyle(
               color: Colors.white,
               fontSize: 22,
@@ -57,12 +57,12 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
           ),
           const SizedBox(height: 8),
           Text(
-            DateFormat.yMMMd().format(note.createdTime),
+            DateFormat.yMMMd().format(movie.createdTime),
             style: const TextStyle(color: Colors.white38),
           ),
           const SizedBox(height: 8),
           Text(
-            note.description,
+            movie.description,
             style:
             const TextStyle(color: Colors.white70, fontSize: 18),
           )
@@ -77,16 +77,16 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
         if (isLoading) return;
 
         await Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => AddEditNotePage(note: note),
+          builder: (context) => AddEditMoviePage(movie: movie),
         ));
 
-        refreshNote();
+        refreshMovie();
       });
 
   Widget deleteButton() => IconButton(
     icon: const Icon(Icons.delete),
     onPressed: () async {
-      await NotesDatabase.instance.delete(widget.noteId);
+      await MovieDatabase.instance.delete(widget.movieId);
 
       Navigator.of(context).pop();
     },
