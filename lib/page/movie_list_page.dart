@@ -40,57 +40,61 @@ class _MovieListPageState extends State<MovieListPage> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text(
-        'Favorite Movies',
-        style: TextStyle(fontSize: 24),
-      ),
-      actions: const [Icon(Icons.search), SizedBox(width: 12)],
-    ),
-    body: Center(
-      child: isLoading
-          ? const CircularProgressIndicator()
-          : movies.isEmpty
-          ? const Text(
-        'No Movies',
-        style: TextStyle(color: Colors.white, fontSize: 24),
-      )
-          : buildMovies(),
-    ),
-    floatingActionButton: FloatingActionButton(
-      backgroundColor: Colors.black,
-      child: const Icon(Icons.add),
-      onPressed: () async {
-        await Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => const AddEditMoviePage()),
-        );
+  Widget build(BuildContext context) =>
+      Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Favorite Movies',
+            style: TextStyle(fontSize: 24),
+          ),
+          actions: const [Icon(Icons.search), SizedBox(width: 12)],
+        ),
+        body: Center(
+          child: isLoading
+              ? const CircularProgressIndicator()
+              : movies.isEmpty
+              ? const Text(
+            'No Movies',
+            style: TextStyle(color: Colors.white, fontSize: 24),
+          )
+              : buildMovies(),
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.black,
+          child: const Icon(Icons.add),
+          onPressed: () async {
+            await Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const AddEditMoviePage()),
+            );
 
-        refreshNotes();
-      },
-    ),
-  );
-  Widget buildMovies() => StaggeredGrid.count(
-      crossAxisCount: 2,
-      mainAxisSpacing: 2,
-      crossAxisSpacing: 2,
-      children: List.generate(
-        movies.length,
-            (index) {
-          final movie = movies[index];
+            refreshNotes();
+          },
+        ),
+      );
 
-          return StaggeredGridTile.fit(
-            crossAxisCellCount: 1,
-            child: GestureDetector(
-              onTap: () async {
-                await Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => MovieDetailPage(movieId: movie.id!),
-                ));
+  Widget buildMovies() =>
+      StaggeredGrid.count(
+          crossAxisCount: 2,
+          mainAxisSpacing: 2,
+          crossAxisSpacing: 2,
+          children: List.generate(
+            movies.length,
+                (index) {
+              final movie = movies[index];
 
-                refreshNotes();
-              },
-              child: MovieCardWidget(movie: movie),
-            ),
-          );
-        },
-      ));
+              return StaggeredGridTile.fit(
+                crossAxisCellCount: 1,
+                child: GestureDetector(
+                  onTap: () async {
+                    await Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => MovieDetailPage(movieId: movie.id!),
+                    ));
+
+                    refreshNotes();
+                  },
+                  child: MovieCardWidget(movie: movie),
+                ),
+              );
+            },
+          ));
+}
