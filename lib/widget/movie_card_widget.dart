@@ -20,6 +20,14 @@ class MovieCardWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (movie.imageURL.isNotEmpty)
+              Image.network(
+                movie.imageURL,
+                height: 150,
+                width: 150,
+                fit: BoxFit.cover,
+              ),
+            const SizedBox(height: 8),
             Text(
               time,
               style: TextStyle(color: Colors.grey.shade700),
